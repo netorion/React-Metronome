@@ -11,7 +11,7 @@ class Metronome extends Component {
       playing: false,
       count: 0,
       bpm: 100,
-      beatPerMeaure: 4
+      beatsPerMeasure: 4
     };
     // Create Audio objects with the files Webpack loaded,
     // and we'll play them later.
@@ -20,8 +20,22 @@ class Metronome extends Component {
   }
 
   handleBpmChange = event => {
-    const bpm = event.target.vlaue;
-    this.setState({ bpm });
+    const bpm = event.target.value;
+
+    if (this.state.playing) {
+      // Stop the old timer and start a new one
+      clearInterval(this.timer);
+      this.timer = setInterval(this.playClick, (60 / bpm) * 1000);
+
+      // Set the new BPM, and reset the beat counter
+      this.setState({
+        count: 0,
+        bpm
+      });
+    } else {
+      // Otherwise just update the BPM
+      this.setState({ bpm });
+    }
   };
 
   startStop = () => {
